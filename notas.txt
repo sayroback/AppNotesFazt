@@ -1,0 +1,100 @@
+^^^^ Proyecto de aplicación con NodeJS y MongoDB. ^^^^
+****
+Crearemos una aplicacion de Notas, que sera un CRUD de nodejs, más un Login y Registro utilizando Mongodb, ademas de proteger nuestras rutas del servidor y estilizar nuestra aplicación con CSS y Bootstrap4.
+
+El autor del curso es Fazt y el link a el es: https://youtu.be/-bI0diefasA.
+****
+
+Iniciamos el proyecto
+
+Dentro de la carpeta donde desarrollaremos el proyecto abrimos una terminal e inicializamos el proyecto en node con el comando:
+  npm init --yes
+Esto creara un archivo .json sonde podemos agregar la info basica del proyecto.
+
+Instalamos los modulos que vamos a necesitar:
+express: es el firmware de node.
+express-handlebars: plantillas para extender el HTML con funciones no nativas del lenguaje.
+express-session: crea sesiones del usuario dentro del servidor.
+method-override: extiende las funciones de los formularios.
+mongoose: ayuda a unir express con la base de datos.
+passport y passport-local: para poder autentificar al usuario.
+bcryptjs: cifra la info que envia el usuario.
+connect-flash: envia mensajes en multiples vistas.
+nodemon: reiniciar el servidor más rapido.
+
+npm i express express-handlebars express-session method-override mongoose passport passport-local bcryptjs connect-flash
+
+Creamos los primeros archivos de la app:
+Creamos la carpeta src y dentro los archivos index.js y database.js y las carpetas config helpers models public routes views.
+
+index.js: pagina principal del proyecto.
+database.js: conexion con la base de datos.
+config: configuraciones basicas.
+helpers: funciones.
+models: como lucen los datos dentro de la base.
+public: archivos estaticos.
+routes: crear las rutas del servidor.
+views: almacena las vistas del HTML.
+
+Llamamos el modulo de express en el index.
+iniciamos el modulo y seccionamos las partes importantes del index en: // Initializations
+// Settings
+// Middleware (Funciones previas al servidor)
+// Global Variables
+// Routes
+// Static Files
+// Server is listening
+
+Fijamos el puerto y la funcion donde arranca el proyecto.
+
+Llamamos al modulo path para poder cambiar la dirección determinada de views.
+
+Llamamos el modulo express-handlebars. Y lo configuramos en un objeto con las propiedades:
+defaultLayout: "main", // diseño principal
+    layoutDir: path.join(app.get("views"), "layouts"), //designamos la dirección de los layouts
+    partialsDir: path.join(app.get("views"), "partials"), //pequeñas partes reutilizables de HTML
+    extname: ".hbs", //designa la extensión de nuestros archivos
+
+Llamamos el modulo method-override.
+
+Llamamos el modulo session y configuramos en un objeto con las propiedades:
+app.use(  session({
+    secret: "halley",
+    resave: true,
+    saveUninitialized: true,  }) );
+
+*** Hasta aqui ta terminamos las configuraciones basicas 26:40 ***
+
++++ Comenzamos a trabajar en las rutas +++
+Creamos los archivos index.js users.js notes.js en la carpeta routes.
+
+Las declaramos en nuestros index en la seccion de Routes.
+app.use(require("./routes/index"));
+app.use(require("./routes/notes"));
+app.use(require("./routes/users"));
+
+Dentro del index de routes llamamos el modulo de express con el metodo Router().
+Este metodo nos permite crear rutas del servidor como:
+router.get("/about", (reg, res) => { res.send("About for me"); });
+
+Todos los archivos deven tener por lo menos:
+const router = require("express").Router();
+module.exports = router;
+Para evitar errores.
+
+Designamos la carpeta de los archivos publicos.
+app.use(express.static(path.join(__dirname, "public")));
+
++++ Conectar con MongoDB +++
+Debemos tenerlo instalado, esta es la guia so utilizas WLS: https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-database?WT.mc_id=twitter
+
+Iniciamos el servicio con el comando:
+sudo service mongodb start
+
+En el archivo database.js llamamos al modulo de mongoose, lo conectamos con una base de datos local y en el index conectamos el archivo de database.js (require("./src/database.js)).
+
++++ Mandar archivos en las rutas +++
+En la carpeta views creamos los archivos index.hbs y about.hbs.
+En los archivos de rutas modificamos el metodo send por render y especificamos la ruta y nombre del archivo .hbs.
+Debemos tener listo nuestro archivo main.hbs dentro de views/layouts con la plantilla base del proyecto.
+Dentro de {{{ body }}} se escribira el codigo que mandemos a llamar.
