@@ -1,10 +1,10 @@
 const router = require("express").Router();
 
 // Rutas
-router.get("/", (reg, res) => {
+router.get("/", (req, res) => {
   res.render("index");
 });
-router.get("/about", (reg, res) => {
+router.get("/about", (req, res) => {
   res.render("about");
 });
 

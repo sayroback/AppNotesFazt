@@ -10,6 +10,8 @@ El autor del curso es Fazt y el link a el es: https://youtu.be/-bI0diefasA.
 Dentro de la carpeta donde desarrollaremos el proyecto abrimos una terminal e inicializamos el proyecto en node con el comando:
   npm init --yes
 Esto creara un archivo .json sonde podemos agregar la info basica del proyecto.
+  npm run dev
+  Esto arranca el servidor
 
 Instalamos los modulos que vamos a necesitar:
 express: es el firmware de node.
@@ -114,4 +116,68 @@ Guardaremos nuestros propios estilos en la carpeta public/css.
 
 Para obtener codigo de degradados podemos ir a:
 https://uigradients.com/
+
+
++++ CRUD (CREATE - READ - UPDATE - DELETE) +++
+Primero crearemos las rutas necesarias para:
+  Obtener un formulario.
+  Agregar una nota.
+  Listar, eliminar y actualizar las notas.
+  Enviar peticiones al servidor.
+
+
+Crearemos una ruta que permita ver un formulario:
+Cuando quiera agregar una nota en la ruta /notes/add se le enviara el archivo /notes/new-note.hbs.
+
+En new-note.hbs diseñaremos el formulario para una nueva nota. Aqui debemos especificar que el formulario sera enviado a traves de new-note con un metodo post:
+form action="/notes/new-note" method="post"
+
+En routes/notes.js recibiremos y procesaremos el formulario.
+Creamos una ruta router.post y atravez de la funcion req.body recibiremos los datos.
+
+Guardamos los datos en una contante:
+const { title, description } = req.body;
+
+Validamos la informacion que nos mandan.
+En Bootstrap buscamos componentes para las alertas de error y las agregamos en el meta de main.hbs y los designamos en new-note.hbs:
+{{#each errors}}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{text}}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+{{/each}}
+
+Tambien debemos agregar el JS de Bootstrap en el main.hbs antes de de la llave de cierre del body.
+
+Para guardar el dato en la base de datos necesitamos diseñar un modelo en la carpeta models/Note.js:
+Requerimos mongoose y creamos un esquema
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
+
+Creamos el esquema:
+const NoteSchema = new Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  date: { type: Date, default: Date.now },
+});
+
+Y guardamos el dato:
+
+module.exports = mongoose.model("Note", NoteSchema);
+
+Desde routes/notes.js requerimos el archivo /models/Note.js:
+const Note = require("../models/Note");
+Este archivo tendra los metodos CREATE - READ - UPDATE - DELETE:
+
+Despues de validar el dato en new-note.hbs:
+  const newNote = new Note({ title, description });
+  await newNote.save();
+  res.redirect("/notes");
+
+Consultaremos los datos en la base utilizando el modelo Note.
 

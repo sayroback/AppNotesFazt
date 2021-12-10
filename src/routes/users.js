@@ -1,10 +1,10 @@
 const router = require("express").Router();
 
 // Rutas
-router.get("/users/signin", (reg, res) => {
+router.get("/users/signin", (req, res) => {
   res.render("user/signin");
 });
-router.get("/users/signup", (reg, res) => {
+router.get("/users/signup", (req, res) => {
   res.render("user/signup");
 });
 
